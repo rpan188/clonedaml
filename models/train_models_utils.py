@@ -1,3 +1,5 @@
+#edit models/train_models.utils.py
+
 import gc
 from pathlib import Path
 from typing import Tuple
@@ -20,7 +22,12 @@ from utils.utils_functions import is_model_encoder_only
 
 def load_explained_model():
     task = ExpArgs.task
-    if ExpArgs.explained_model_backbone == ModelBackboneTypes.BERT.value:
+    #first if statement is added
+    if ExpArgs.explained_model_backbone == ModelBackboneTypes.ESM3.value:
+        from esm.models.esm3 import ESM3
+        from esm.sdk.api import ESM3InferenceClient, ESMProtein, GenerationConfig
+        model = ESM3.from_pretrained("esm3_sm_open_v1").to("cuda") # or "cpu"
+    elif ExpArgs.explained_model_backbone == ModelBackboneTypes.BERT.value:
         from transformers import BertForSequenceClassification
         model = BertForSequenceClassification.from_pretrained(task.bert_fine_tuned_model, cache_dir = HF_CACHE)
         model.cuda()
@@ -108,6 +115,8 @@ def load_interpreter_model():
         return RobertaInterpreter.from_pretrained(model_path, cache_dir = HF_CACHE)
     elif interpreter_model_backbone == ModelBackboneTypes.DISTILBERT.value:
         return DistilBertInterpreter.from_pretrained(model_path, cache_dir = HF_CACHE)
+    elif interpreter_model_backbone == ModelBackboneTypes.ESM3.value:
+        return #not done yet
     else:
         raise ValueError("unsupported model backbone selected")
 

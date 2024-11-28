@@ -6,4 +6,3 @@ icecream
 datasets
 matplotlib
 tensorboard
-tokenizations

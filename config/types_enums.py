@@ -7,6 +7,7 @@ class ModelBackboneTypes(Enum):
     DISTILBERT = 'DISTILBERT'
     LLAMA = 'LLAMA'
     MISTRAL = 'MISTRAL'
+    ESM3 = "ESM3"
 
 
 class TokenTransformationTypes(Enum):

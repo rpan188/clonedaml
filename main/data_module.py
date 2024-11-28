@@ -1,5 +1,7 @@
+#fixed data_module.py
+
 import pytorch_lightning as pl
-import tokenizations
+#import tokenizations
 import torch
 from datasets import load_dataset, Dataset
 from torch.utils.data import DataLoader
@@ -13,6 +15,77 @@ from config.types_enums import ValidationType
 from models.train_models_utils import get_models_tokenizer
 from utils.utils_functions import is_model_encoder_only, is_use_prompt, get_model_special_tokens
 
+#added this code to data_module.py:
+#tokenizations set up get_alignment
+from typing import List, Tuple
+
+def normalize(s: str) -> str:
+    """
+    Normalize a string (placeholder for normalization logic).
+    This could include lowercasing, removing accents, etc.
+    """
+    return s.lower()  # Example normalization
+
+def get_char2token(tokens: List[str]) -> List[int]:
+    """
+    Map character indices to token indices.
+    Returns a list where each character in the concatenated tokens maps to its token index.
+    """
+    char2token = []
+    for token_index, token in enumerate(tokens):
+        char2token.extend([token_index] * len(token))
+    return char2token
+
+def seqdiff(a: List[str], b: List[str]) -> Tuple[List[Tuple[int, int]], List[Tuple[int, int]]]:
+    """
+    Compute differences between two sequences.
+    Returns a tuple of forward (a2b) and reverse (b2a) alignments.
+    """
+    from difflib import SequenceMatcher
+
+    matcher = SequenceMatcher(None, a, b)
+    a2b, b2a = [], []
+
+    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+        if tag == 'equal':
+            for i, j in zip(range(i1, i2), range(j1, j2)):
+                a2b.append((i, j))
+                b2a.append((j, i))
+
+    return a2b, b2a
+
+def get_alignment(length: int, mapping: List[Tuple[int, int]], c2t_src: List[int], c2t_tgt: List[int]) -> List[List[int]]:
+    """
+    Generate token alignments from character mappings.
+    """
+    alignments = [[] for _ in range(length)]
+    for src_char, tgt_char in mapping:
+        src_token = c2t_src[src_char]
+        tgt_token = c2t_tgt[tgt_char]
+        if tgt_token not in alignments[src_token]:
+            alignments[src_token].append(tgt_token)
+    return alignments
+
+def get_alignments(a: List[str], b: List[str]) -> Tuple[List[List[int]], List[List[int]]]:
+    """
+    Main function to compute alignments between two sequences of tokens.
+    """
+    # Normalize the inputs
+    a = [normalize(x) for x in a]
+    b = [normalize(x) for x in b]
+
+    # Generate character-to-token mappings
+    ac2t = get_char2token(a)
+    bc2t = get_char2token(b)
+
+    # Compute differences between character sequences
+    a2b, b2a = seqdiff(list("".join(a)), list("".join(b)))
+
+    # Compute token-level alignments
+    at2bt = get_alignment(len(a), a2b, ac2t, bc2t)
+    bt2at = get_alignment(len(b), b2a, bc2t, ac2t)
+
+    return at2bt, bt2at
 
 class DataModule(pl.LightningDataModule):
     def __init__(self, val_type: ValidationType, train_sample: int = -1, test_sample: int = -1,
@@ -292,7 +365,7 @@ class DataModule(pl.LightningDataModule):
                                 item[EXPLAINED_INPUT_IDS_NAME]]
             interpreter_tokens = [self.convert_to_token(i, self.interpreter_tokenizer) for i in
                                   item[INTERPRETER_INPUT_IDS_NAME]]
-            a2b, b2a = tokenizations.get_alignments(explained_tokens, interpreter_tokens)
+            a2b, b2a = get_alignments(explained_tokens, interpreter_tokens)
 
             a2b = self.fill_empty_items(a2b)
 
