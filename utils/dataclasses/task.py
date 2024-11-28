@@ -5,7 +5,7 @@ from config.constants import TEXT_PROMPT, LABEL_PROMPT
 
 class Task:
     def __init__(self, dataset_name: str, dataset_train: str, dataset_val: str, dataset_test: str,
-                 dataset_column_text: str, dataset_column_label: str, bert_fine_tuned_model: str,
+                 dataset_column_text: str, dataset_column_label: str, esm_model: str, bert_fine_tuned_model: str,
                  roberta_fine_tuned_model: str, distilbert_fine_tuned_model: str, roberta_base_model: str,
                  distilbert_base_model: str, bert_base_model: str, llama_model: str, mistral_model: str,
                  labels_str_int_maps: Union[Dict, None], default_lr: float, llm_lr: float,
@@ -20,6 +20,7 @@ class Task:
         self.dataset_test = dataset_test
         self.dataset_column_text = dataset_column_text
         self.dataset_column_label = dataset_column_label
+        self.esm_model = esm_model
         self.bert_fine_tuned_model = bert_fine_tuned_model
         self.roberta_fine_tuned_model = roberta_fine_tuned_model
         self.distilbert_fine_tuned_model = distilbert_fine_tuned_model

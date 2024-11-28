@@ -1,12 +1,14 @@
 import sys
 
+
+
 sys.path.append("../..")
 
 from main.hp_search import HpSearch
 from main.run_fine_tune import FineTune
 from main.run_pre_train import PreTrain
 
-#from runs.runs_utils import get_task
+from runs.runs_utils import get_task
 
 import argparse
 
@@ -16,24 +18,21 @@ from utils.utils_functions import get_current_time, is_model_encoder_only
 from models.train_models_utils import load_explained_model
 from main.run_infrence_pre_train import InferencePretrain
 
-from config.tasks import EMOTION_TASK
-
 parser = argparse.ArgumentParser(description = 'Argument parser')
 
-#parser.add_argument('task', type = str, help = '')
+parser.add_argument('task', type = str, help = '')
 parser.add_argument('explained_model_backbone', type = str, help = '')
 parser.add_argument('interpreter_model_backbone', type = str, help = '')
 parser.add_argument('metric', type = str, help = '')
 
 args = parser.parse_args()
 
-#arg_task = args.task
+arg_task = args.task
 arg_explained_model_backbone = args.explained_model_backbone
 arg_interpreter_model_backbone = args.interpreter_model_backbone
 arg_metric = args.metric
 
-#ExpArgs.task = get_task(arg_task)
-ExpArgs.task = EMOTION_TASK ##MANUALLY INSERT TASK HERE
+ExpArgs.task = get_task(arg_task)
 ExpArgs.explained_model_backbone = arg_explained_model_backbone
 ExpArgs.interpreter_model_backbone = arg_interpreter_model_backbone
 ExpArgs.eval_metric = arg_metric
@@ -47,7 +46,7 @@ if is_llm:
 
 # START AML
 
-print("*" * 20, arg_explained_model_backbone, arg_interpreter_model_backbone, arg_metric, "*" * 20,
+print("*" * 20, arg_task, arg_explained_model_backbone, arg_interpreter_model_backbone, arg_metric, "*" * 20,
       flush = True)
 
 time_str = get_current_time()
@@ -75,4 +74,4 @@ InferencePretrain(hp, inference_pretrain_experiment_name, explained_model = expl
 # Run finetune
 fine_tune_exp_name = f"FINE_TUNE_{experiment_name_prefix}_{time_str}"
 FineTune(hp, fine_tune_exp_name, explained_model = explained_model).run()
-print("*" * 20, "END OF ", arg_explained_model_backbone, arg_interpreter_model_backbone, arg_metric, "*" * 20)
+print("*" * 20, "END OF ", arg_task, arg_explained_model_backbone, arg_interpreter_model_backbone, arg_metric, "*" * 20)

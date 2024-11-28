@@ -1,5 +1,3 @@
-#edit models/train_models.utils.py
-
 import gc
 from pathlib import Path
 from typing import Tuple
@@ -19,6 +17,7 @@ from models.interpreter_models.roberta_interpreter import RobertaInterpreter
 from utils.dataclasses import Task
 from utils.utils_functions import is_model_encoder_only
 
+#need to edit load_interpreter_model, get_warmup_steps_and_total_training_steps, init_trainable_embeddings, get_explained_ref_token_name, run_trainer
 
 def load_explained_model():
     task = ExpArgs.task
@@ -106,6 +105,7 @@ def get_interpreter_model_path(task: Task):
 
 
 def load_interpreter_model():
+    #need to add interpreter to models/interpreter_models
     task = ExpArgs.task
     model_path: str = get_interpreter_model_path(task)
     interpreter_model_backbone = ExpArgs.interpreter_model_backbone
