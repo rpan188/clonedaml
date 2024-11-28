@@ -1,6 +1,57 @@
 from config.constants import LOCAL_MODELS_PREFIX
 from utils.dataclasses import Task
 
+ESM_TASK: Task = Task(dataset_name = "tbd",  #
+                          dataset_train = "tbd",  #
+                          dataset_val = "tbd",  #
+
+                          dataset_test = "tbd",  #
+                          dataset_column_text = "tbd",  #
+                          dataset_column_label = "tbd",  #
+
+                          esm_model = "esm3_sm_open_v1",
+
+                          bert_fine_tuned_model = "bhadresh-savani/bert-base-uncased-emotion",  #
+
+                          roberta_fine_tuned_model = "bhadresh-savani/roberta-base-emotion",  #
+
+                          distilbert_fine_tuned_model = "Rahmat82/DistilBERT-finetuned-on-emotion",  #
+
+                          roberta_base_model = "FacebookAI/roberta-base",  #
+
+                          distilbert_base_model = "distilbert/distilbert-base-uncased",  #
+
+                          bert_base_model = "bert-base-uncased",  #
+
+                          llama_model = f"{LOCAL_MODELS_PREFIX}/DOWNLOADED_MODELS/meta-llama_Llama-2-7b-hf",  #
+
+                          mistral_model = f"{LOCAL_MODELS_PREFIX}/DOWNLOADED_MODELS/mistralai_Mistral-7B-v0.1",  #
+
+                          is_finetuned_with_lora = True,  #
+
+                          llama_adapter = f"{LOCAL_MODELS_PREFIX}/TRAINED_MODELS/LLAMA_emotions_is_bf16_True_is_use_prompt_False",
+                          #
+
+                          mistral_adapter = f"{LOCAL_MODELS_PREFIX}/TRAINED_MODELS/MISTRAL_emotions_is_bf16_True_is_use_prompt_False",
+                          #
+
+                          labels_str_int_maps = dict(sadness = "A", joy = "B", love = "C", anger = "D", fear = "E",
+                                                     surprise = "F"), #
+
+                          default_lr = 4e-5,  #
+                          llm_lr = 8e-5,  #
+                          test_sample = None,  #
+                          train_sample = 1_000,  #
+
+                          hp_search_test_sample = 200,  #
+                          hp_search_train_sample = 450,  #
+                          name = "esm",  #
+                          paper_name = "esm",  #
+                          hp_search_n_trials = 30,  #
+                          llm_task_prompt = "Classify the emotion expressed in each sentences. for each sentence the label is sadness (A) or joy (B) or love (C) or anger (D) or fear (4) or surprise (E)",
+                          #
+                          llm_few_shots_prompt = [])
+
 IMDB_TASK: Task = Task(  #
     dataset_name = "imdb",  #
     dataset_train = "train",  #
@@ -8,6 +59,7 @@ IMDB_TASK: Task = Task(  #
     dataset_test = "test",  #
     dataset_column_text = "text",  #
     dataset_column_label = "label",  #
+    esm_model = "esm3_sm_open_v1",
     bert_fine_tuned_model = "textattack/bert-base-uncased-imdb",  #
     roberta_fine_tuned_model = "textattack/roberta-base-imdb",  #
     distilbert_fine_tuned_model = "textattack/distilbert-base-uncased-imdb",  #
@@ -56,6 +108,8 @@ EMOTION_TASK: Task = Task(dataset_name = "emotion",  #
                           dataset_column_text = "text",  #
                           dataset_column_label = "label",  #
 
+                          esm_model = "esm3_sm_open_v1",
+
                           bert_fine_tuned_model = "bhadresh-savani/bert-base-uncased-emotion",  #
 
                           roberta_fine_tuned_model = "bhadresh-savani/roberta-base-emotion",  #
@@ -103,6 +157,7 @@ SST_TASK: Task = Task(dataset_name = "sst2",  #
                       dataset_test = "test",  #
                       dataset_column_text = "sentence",  #
                       dataset_column_label = "label",  #
+                      esm_model = "esm3_sm_open_v1",
                       bert_fine_tuned_model = "textattack/bert-base-uncased-SST-2",  #
                       roberta_fine_tuned_model = "textattack/roberta-base-SST-2",  #
                       llama_model = f"{LOCAL_MODELS_PREFIX}/DOWNLOADED_MODELS/meta-llama_Llama-2-7b-hf",  #
@@ -138,6 +193,7 @@ AGN_TASK: Task = Task(dataset_name = "ag_news",  #
                       dataset_test = "test",  #
                       dataset_column_text = "text",  #
                       dataset_column_label = "label",  #
+                      esm_model = "esm3_sm_open_v1",
                       bert_fine_tuned_model = "fabriceyhc/bert-base-uncased-ag_news",  #
                       roberta_fine_tuned_model = "textattack/roberta-base-ag-news",  #
                       labels_str_int_maps = dict(world = "A", sports = "B", business = "C", sci_tech = "D"),  #
@@ -168,6 +224,7 @@ RTN_TASK: Task = Task(dataset_name = "rotten_tomatoes",  #
                       dataset_test = "test",  #
                       dataset_column_text = "text",  #
                       dataset_column_label = "label",  #
+                      esm_model = "esm3_sm_open_v1",
                       bert_fine_tuned_model = "textattack/bert-base-uncased-rotten-tomatoes",  #
                       roberta_fine_tuned_model = "textattack/roberta-base-rotten-tomatoes",  #
                       distilbert_fine_tuned_model = "textattack/distilbert-base-uncased-rotten-tomatoes",  #
